@@ -1,0 +1,3 @@
+Bundled wiki map images were fetched from The Long Dark Wiki interactive maps.
+Source wiki: https://thelongdark.fandom.com/wiki/Special:AllMaps
+Fandom states community content is available under CC-BY-SA unless otherwise noted.

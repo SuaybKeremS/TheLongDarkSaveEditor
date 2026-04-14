@@ -1,0 +1,146 @@
+[
+  {
+    "regionKey": "BlackrockRegion",
+    "pageTitle": "Map:Blackrock",
+    "mapImage": "BLR loper.jpg",
+    "outputName": "BlackrockRegion.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/1/11/BLR_loper.jpg/revision/latest?cb=20250302132456",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        3870,
+        4171
+      ]
+    ],
+    "description": "A detailed map of Blackrock."
+  },
+  {
+    "regionKey": "KeepersPass",
+    "pageTitle": "Map:Keeper_pass",
+    "mapImage": "3255435617 preview KP default.jpg",
+    "outputName": "KeepersPass.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/5/56/3255435617_preview_KP_default.jpg/revision/latest?cb=20250301054405",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        1859,
+        2461
+      ]
+    ],
+    "description": ""
+  },
+  {
+    "regionKey": "WindingRiver",
+    "pageTitle": "Map:Winding_River",
+    "mapImage": "Winding River map by whiteberry-toarda.png",
+    "outputName": "WindingRiver.png",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/c/c3/Winding_River_map_by_whiteberry-toarda.png/revision/latest?cb=20151231023733",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        1188,
+        913
+      ]
+    ],
+    "description": ""
+  },
+  {
+    "regionKey": "FarRangeBranchLine",
+    "pageTitle": "Map:Far_Range_Branch_Line",
+    "mapImage": "Far Range Branch Line.jpg",
+    "outputName": "FarRangeBranchLine.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/f/fa/Far_Range_Branch_Line.jpg/revision/latest?cb=20250212052133",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        3194,
+        1542
+      ]
+    ],
+    "description": "taken from HokuOwl check out https://steamcommunity.com/sharedfiles/filedetails/?id=3255435617"
+  },
+  {
+    "regionKey": "AirfieldRegion",
+    "pageTitle": "Map:Forsaken_Airfield",
+    "mapImage": "Forsaken Airfield In-game Map.png",
+    "outputName": "AirfieldRegion.png",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/0/0f/Forsaken_Airfield_In-game_Map.png/revision/latest?cb=20221207202353",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        2048,
+        2048
+      ]
+    ],
+    "description": "A somewhat detailed map of Forsaken Airfield."
+  },
+  {
+    "regionKey": "TransferPassRegion",
+    "pageTitle": "Map:Transfer_Pass",
+    "mapImage": "Transfer Pass Map.jpg",
+    "outputName": "TransferPassRegion.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/8/82/Transfer_Pass_Map.jpg/revision/latest?cb=20250212052407",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        1987,
+        2146
+      ]
+    ],
+    "description": "taken from HokuOwl check out https://steamcommunity.com/sharedfiles/filedetails/?id=3255435617"
+  },
+  {
+    "regionKey": "ZoneOfContaminationRegion",
+    "pageTitle": "Map:Zone_of_Contamination",
+    "mapImage": "Zone of Contamination map.jpg",
+    "outputName": "ZoneOfContaminationRegion.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/0/03/Zone_of_Contamination_map.jpg/revision/latest?cb=20250212050744",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        3203,
+        3803
+      ]
+    ],
+    "description": "done by HokuOwl https://steamcommunity.com/sharedfiles/filedetails/?id=3255435617"
+  },
+  {
+    "regionKey": "SunderedPassRegion",
+    "pageTitle": "Map:Sundered_Pass_map",
+    "mapImage": "Sundered Pass Map.jpg",
+    "outputName": "SunderedPassRegion.jpg",
+    "imageUrl": "https://static.wikia.nocookie.net/intothelongdark/images/a/a0/Sundered_Pass_Map.jpg/revision/latest?cb=20250212052641",
+    "mapBounds": [
+      [
+        0,
+        0
+      ],
+      [
+        4254,
+        5006
+      ]
+    ],
+    "description": "taken from HokuOwl check out https://steamcommunity.com/sharedfiles/filedetails/?id=3255435617"
+  }
+]

@@ -1,0 +1,27 @@
+# Build outputs
+**/bin/
+**/obj/
+release/
+artifacts/
+
+# Visual Studio / Rider / user-specific
+.vs/
+.idea/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs / caches
+*.log
+*.cache
+*.tmp
+*.bak
+*.backup
+
+# OS files
+Thumbs.db
+Desktop.ini
+
+# NuGet
+packages/

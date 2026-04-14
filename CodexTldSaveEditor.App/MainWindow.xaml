@@ -1,0 +1,1456 @@
+<Window x:Class="CodexTldSaveEditor.App.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:conv="clr-namespace:CodexTldSaveEditor.App.Converters"
+        xmlns:tldconv="clr-namespace:The_Long_Dark_Save_Editor_2.Converters"
+        xmlns:images="clr-namespace:The_Long_Dark_Save_Editor_2.Images"
+        mc:Ignorable="d"
+        Title="The Long Dark Save Editor"
+        Width="1460"
+        Height="920"
+        MinWidth="1180"
+        MinHeight="780"
+        Background="#06090C"
+        Foreground="#F4F0E6"
+        FontFamily="Segoe UI"
+        Icon="Assets/Brand/tld-editor.ico"
+        Loaded="Window_Loaded">
+    <Window.Resources>
+        <conv:NullToVisibilityConverter x:Key="NullToVisibilityConverter" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <tldconv:EnumDescriptionConverter x:Key="EnumDescriptionConverter" />
+
+        <LinearGradientBrush x:Key="WindowBackgroundBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#071018" Offset="0" />
+            <GradientStop Color="#0C1620" Offset="0.52" />
+            <GradientStop Color="#12202B" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="SidebarBrush" StartPoint="0,0" EndPoint="0,1">
+            <GradientStop Color="#0D141B" Offset="0" />
+            <GradientStop Color="#131B24" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="CardBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#111922" Offset="0" />
+            <GradientStop Color="#17212B" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="HeroBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#121A22" Offset="0" />
+            <GradientStop Color="#192430" Offset="0.55" />
+            <GradientStop Color="#203140" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ButtonBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#35546A" Offset="0" />
+            <GradientStop Color="#456A82" Offset="0.55" />
+            <GradientStop Color="#5B86A1" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ButtonHoverBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#42647B" Offset="0" />
+            <GradientStop Color="#547B94" Offset="0.55" />
+            <GradientStop Color="#6A98B4" Offset="1" />
+        </LinearGradientBrush>
+        <LinearGradientBrush x:Key="ButtonPressedBrush" StartPoint="0,0" EndPoint="1,1">
+            <GradientStop Color="#2D485B" Offset="0" />
+            <GradientStop Color="#3E6278" Offset="0.55" />
+            <GradientStop Color="#4F7E98" Offset="1" />
+        </LinearGradientBrush>
+        <SolidColorBrush x:Key="StrokeBrush" Color="#324250" />
+        <SolidColorBrush x:Key="AccentBrush" Color="#9BCDDD" />
+        <SolidColorBrush x:Key="AccentTextBrush" Color="#F5FBFF" />
+        <SolidColorBrush x:Key="MutedBrush" Color="#A2B2BE" />
+        <SolidColorBrush x:Key="InputBrush" Color="#101720" />
+        <SolidColorBrush x:Key="InputBorderBrush" Color="#40515F" />
+        <SolidColorBrush x:Key="SelectedBrush" Color="#1E2B38" />
+        <SolidColorBrush x:Key="TabIdleBrush" Color="#121A22" />
+        <SolidColorBrush x:Key="TabSelectedBrush" Color="#1A2630" />
+        <SolidColorBrush x:Key="TabHoverBrush" Color="#16212B" />
+
+        <DropShadowEffect x:Key="CardShadowEffect"
+                          Color="#7A000000"
+                          BlurRadius="34"
+                          ShadowDepth="0"
+                          Opacity="0.24" />
+        <DropShadowEffect x:Key="ButtonShadowEffect"
+                          Color="#662B4557"
+                          BlurRadius="24"
+                          ShadowDepth="0"
+                          Opacity="0.28" />
+
+        <Style TargetType="Border" x:Key="CardStyle">
+            <Setter Property="Background" Value="{StaticResource CardBrush}" />
+            <Setter Property="CornerRadius" Value="28" />
+            <Setter Property="BorderBrush" Value="{StaticResource StrokeBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Margin" Value="0,0,0,12" />
+            <Setter Property="Effect" Value="{StaticResource CardShadowEffect}" />
+        </Style>
+
+        <Style TargetType="Button" x:Key="ActionButtonStyle">
+            <Setter Property="Foreground" Value="{StaticResource AccentTextBrush}" />
+            <Setter Property="Background" Value="{StaticResource ButtonBrush}" />
+            <Setter Property="BorderBrush" Value="#6F97B2" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Padding" Value="12,6" />
+            <Setter Property="Margin" Value="0,0,6,4" />
+            <Setter Property="MinWidth" Value="74" />
+            <Setter Property="MinHeight" Value="34" />
+            <Setter Property="Effect" Value="{StaticResource ButtonShadowEffect}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Chrome"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="16"
+                                SnapsToDevicePixels="True">
+                            <Grid>
+                                <Border x:Name="Sheen"
+                                        CornerRadius="16"
+                                        Opacity="0.30">
+                                    <Border.Background>
+                                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                            <GradientStop Color="#66FFFFFF" Offset="0" />
+                                            <GradientStop Color="#00FFFFFF" Offset="0.6" />
+                                        </LinearGradientBrush>
+                                    </Border.Background>
+                                </Border>
+                                <ContentPresenter HorizontalAlignment="Center"
+                                                  VerticalAlignment="Center"
+                                                  Margin="{TemplateBinding Padding}" />
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{StaticResource ButtonHoverBrush}" />
+                                <Setter TargetName="Chrome" Property="BorderBrush" Value="#9EC1D7" />
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Chrome" Property="Background" Value="{StaticResource ButtonPressedBrush}" />
+                                <Setter TargetName="Chrome" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <TranslateTransform Y="1" />
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="Sheen" Property="Opacity" Value="0.18" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Chrome" Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="Button" x:Key="CompactActionButtonStyle" BasedOn="{StaticResource ActionButtonStyle}">
+            <Setter Property="FontSize" Value="10.5" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="MinWidth" Value="68" />
+            <Setter Property="MinHeight" Value="30" />
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="EditorTextBoxStyle">
+            <Setter Property="Foreground" Value="#F4F0E6" />
+            <Setter Property="Background" Value="{StaticResource InputBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,7" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border x:Name="EditorBorder"
+                                Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="16">
+                            <ScrollViewer x:Name="PART_ContentHost" Margin="{TemplateBinding Padding}" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsKeyboardFocused" Value="True">
+                                <Setter TargetName="EditorBorder" Property="BorderBrush" Value="{StaticResource AccentBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="EditorBorder" Property="BorderBrush" Value="#587189" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ComboBox" x:Key="EditorComboBoxStyle">
+            <Setter Property="Foreground" Value="#EFF7FD" />
+            <Setter Property="Background" Value="{StaticResource InputBrush}" />
+            <Setter Property="BorderBrush" Value="{StaticResource InputBorderBrush}" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="10,6" />
+            <Setter Property="Margin" Value="0,0,0,8" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="MinHeight" Value="36" />
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="MaxDropDownHeight" Value="360" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <Border x:Name="ComboChrome"
+                                    Background="{TemplateBinding Background}"
+                                    BorderBrush="{TemplateBinding BorderBrush}"
+                                    BorderThickness="{TemplateBinding BorderThickness}"
+                                    CornerRadius="16">
+                                <Grid>
+                                    <ContentPresenter Margin="14,0,54,0"
+                                                      VerticalAlignment="Center"
+                                                      HorizontalAlignment="Left"
+                                                      TextElement.Foreground="{TemplateBinding Foreground}"
+                                                      Content="{TemplateBinding SelectionBoxItem}"
+                                                      ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                                      ContentStringFormat="{TemplateBinding SelectionBoxItemStringFormat}" />
+                                    <Border x:Name="DropArrowHost"
+                                            Width="34"
+                                            Height="28"
+                                            Margin="0,0,8,0"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Background="#15212C"
+                                            BorderBrush="#344959"
+                                            BorderThickness="1"
+                                            CornerRadius="12">
+                                        <Path Width="10"
+                                              Height="6"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"
+                                              Data="M 0 0 L 5 6 L 10 0 Z"
+                                            Fill="{StaticResource AccentBrush}"
+                                              Stretch="Fill" />
+                                    </Border>
+                                </Grid>
+                            </Border>
+                            <ToggleButton x:Name="DropDownToggle"
+                                          Focusable="False"
+                                          ClickMode="Press"
+                                          IsChecked="{Binding IsDropDownOpen, RelativeSource={RelativeSource TemplatedParent}, Mode=TwoWay}"
+                                          Background="Transparent"
+                                          BorderThickness="0">
+                                <ToggleButton.Template>
+                                    <ControlTemplate TargetType="ToggleButton">
+                                        <Border Background="Transparent"
+                                                BorderThickness="0"
+                                                CornerRadius="16" />
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <Popup x:Name="PART_Popup"
+                                   AllowsTransparency="True"
+                                   Focusable="False"
+                                   IsOpen="{TemplateBinding IsDropDownOpen}"
+                                   PlacementTarget="{Binding RelativeSource={RelativeSource TemplatedParent}}"
+                                   Placement="Bottom"
+                                   PopupAnimation="Slide">
+                                <Border Margin="0,8,0,0"
+                                        MinWidth="{Binding ActualWidth, RelativeSource={RelativeSource TemplatedParent}}"
+                                        MaxHeight="{TemplateBinding MaxDropDownHeight}"
+                                        Padding="6"
+                                        Background="#0F161D"
+                                        BorderBrush="#395164"
+                                        BorderThickness="1"
+                                        CornerRadius="18">
+                                    <ScrollViewer SnapsToDevicePixels="True"
+                                                  HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}"
+                                                  VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}">
+                                        <ItemsPresenter KeyboardNavigation.DirectionalNavigation="Contained" />
+                                    </ScrollViewer>
+                                </Border>
+                            </Popup>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ComboChrome" Property="BorderBrush" Value="#58728A" />
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                                <Setter TargetName="ComboChrome" Property="BorderBrush" Value="#8FC4E2" />
+                                <Setter TargetName="DropArrowHost" Property="BorderBrush" Value="#8FC4E2" />
+                            </Trigger>
+                            <Trigger Property="IsDropDownOpen" Value="True">
+                                <Setter TargetName="ComboChrome" Property="BorderBrush" Value="#8FC4E2" />
+                                <Setter TargetName="DropArrowHost" Property="Background" Value="#213444" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="ComboChrome" Property="Opacity" Value="0.45" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="CompactDetailLabelStyle">
+            <Setter Property="Margin" Value="0,0,0,4" />
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+            <Setter Property="TextWrapping" Value="Wrap" />
+        </Style>
+
+        <Style TargetType="TextBox" x:Key="CompactDetailTextBoxStyle" BasedOn="{StaticResource EditorTextBoxStyle}">
+            <Setter Property="Padding" Value="8,5" />
+            <Setter Property="Margin" Value="0" />
+            <Setter Property="FontSize" Value="11" />
+        </Style>
+
+        <Style TargetType="Border" x:Key="InventoryDetailFieldCardStyle">
+            <Setter Property="Width" Value="184" />
+            <Setter Property="MinHeight" Value="64" />
+            <Setter Property="Margin" Value="0,0,8,8" />
+            <Setter Property="Padding" Value="8" />
+            <Setter Property="CornerRadius" Value="12" />
+            <Setter Property="BorderBrush" Value="#2B3A47" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Background" Value="#101821" />
+        </Style>
+
+        <Style TargetType="ComboBoxItem">
+            <Setter Property="Foreground" Value="#EDF5FA" />
+            <Setter Property="Background" Value="#0F151B" />
+            <Setter Property="Padding" Value="8,6" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBoxItem">
+                        <Border x:Name="ItemBorder"
+                                Margin="0,2,0,2"
+                                Padding="{TemplateBinding Padding}"
+                                Background="{TemplateBinding Background}"
+                                CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="Center" />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsHighlighted" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#203240" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemBorder" Property="Background" Value="#274154" />
+                                <Setter Property="Foreground" Value="#FFFFFF" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="CheckBox">
+            <Setter Property="Foreground" Value="#EEF2F6" />
+            <Setter Property="Margin" Value="0,2,0,10" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+
+        <Style TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabControl">
+                        <Grid KeyboardNavigation.TabNavigation="Local" SnapsToDevicePixels="True">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+                            <Border Grid.Row="0"
+                                    Margin="0,0,0,14"
+                                    Padding="12"
+                                    CornerRadius="26"
+                                    Background="#0E161E"
+                                    BorderBrush="#253543"
+                                    BorderThickness="1">
+                                <TabPanel x:Name="HeaderPanel"
+                                          IsItemsHost="True"
+                                          Background="Transparent"
+                                          Margin="0" />
+                            </Border>
+                            <ContentPresenter x:Name="PART_SelectedContentHost"
+                                              Grid.Row="1"
+                                              Margin="{TemplateBinding Padding}"
+                                              ContentSource="SelectedContent" />
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TabItem">
+            <Setter Property="Foreground" Value="{StaticResource MutedBrush}" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="13" />
+            <Setter Property="MinWidth" Value="112" />
+            <Setter Property="Height" Value="50" />
+            <Setter Property="Margin" Value="0,0,10,0" />
+            <Setter Property="Padding" Value="22,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Grid>
+                            <Border x:Name="TabBorder"
+                                    Background="{StaticResource TabIdleBrush}"
+                                    BorderBrush="#2D3C4A"
+                                    BorderThickness="1"
+                                    CornerRadius="18" />
+                            <Border x:Name="TabGlow"
+                                    Margin="1"
+                                    CornerRadius="17"
+                                    Opacity="0.22">
+                                <Border.Background>
+                                    <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                        <GradientStop Color="#55FFFFFF" Offset="0" />
+                                        <GradientStop Color="#00FFFFFF" Offset="0.55" />
+                                    </LinearGradientBrush>
+                                </Border.Background>
+                            </Border>
+                            <Border x:Name="TabAccent"
+                                    Height="3"
+                                    Margin="16,0,16,6"
+                                    VerticalAlignment="Bottom"
+                                    Background="#76A6BE"
+                                    CornerRadius="999"
+                                    Opacity="0" />
+                            <ContentPresenter ContentSource="Header"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#182633" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#8CBED5" />
+                                <Setter TargetName="TabGlow" Property="Opacity" Value="0.48" />
+                                <Setter TargetName="TabAccent" Property="Opacity" Value="1" />
+                                <Setter Property="Foreground" Value="#F8FCFF" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="#15212C" />
+                                <Setter TargetName="TabBorder" Property="BorderBrush" Value="#567184" />
+                                <Setter TargetName="TabGlow" Property="Opacity" Value="0.34" />
+                                <Setter TargetName="TabAccent" Property="Opacity" Value="0.45" />
+                                <Setter Property="Foreground" Value="#ECF6FC" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="0" />
+        </Style>
+
+        <Style x:Key="SaveListBoxStyle" TargetType="ListBox" BasedOn="{StaticResource {x:Type ListBox}}">
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled" />
+            <Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Auto" />
+            <Setter Property="ScrollViewer.CanContentScroll" Value="True" />
+            <Setter Property="Padding" Value="0,0,8,0" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBox">
+                        <Border Background="{TemplateBinding Background}">
+                            <ScrollViewer Focusable="False"
+                                          Padding="{TemplateBinding Padding}"
+                                          VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}"
+                                          HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}">
+                                <ItemsPresenter />
+                            </ScrollViewer>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="ListBoxItem">
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="0,0,0,6" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <Border x:Name="ItemHost"
+                                Background="Transparent"
+                                CornerRadius="18"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter />
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="ItemHost" Property="Background" Value="Transparent" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ItemHost" Property="Background" Value="#0D161F" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+        <Grid Background="{StaticResource WindowBackgroundBrush}">
+            <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="336" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <Canvas Grid.ColumnSpan="2" IsHitTestVisible="False">
+            <Ellipse Width="500" Height="500" Fill="#0F6A8B66" Canvas.Left="-160" Canvas.Top="-180" />
+            <Ellipse Width="420" Height="420" Fill="#0D4D6B4D" Canvas.Left="940" Canvas.Top="-110" />
+            <Ellipse Width="320" Height="320" Fill="#0B3E5644" Canvas.Left="1110" Canvas.Top="600" />
+        </Canvas>
+
+        <Border Grid.Column="0"
+                Margin="18"
+                Background="{StaticResource SidebarBrush}"
+                BorderBrush="#223342"
+                BorderThickness="1"
+                CornerRadius="36">
+            <Grid Margin="22">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Border Grid.Row="0"
+                        Margin="0,0,0,14"
+                        Padding="16"
+                        CornerRadius="26"
+                        BorderBrush="#465B6C"
+                        BorderThickness="1"
+                        Background="{StaticResource HeroBrush}">
+                    <StackPanel>
+                        <TextBlock FontSize="27" FontWeight="Bold" Text="CODEX" />
+                        <TextBlock Margin="0,4,0,0"
+                                   Foreground="#EEF6FB"
+                                   FontSize="15"
+                                   Text="The Long Dark Save Editor" />
+                        <TextBlock Margin="0,8,0,0"
+                                   Foreground="#B9C8D3"
+                                   Text="Pick a detected save below and edit it from the tabs on the right."
+                                   TextWrapping="Wrap" />
+                    </StackPanel>
+                </Border>
+                <Border Grid.Row="1" Style="{StaticResource CardStyle}" Margin="0,0,0,10">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <DockPanel Margin="0,0,0,10">
+                            <TextBlock FontSize="18" FontWeight="Bold" Text="Detected Saves" />
+                            <Border DockPanel.Dock="Right"
+                                    MinWidth="76"
+                                    Padding="8,3"
+                                    CornerRadius="999"
+                                    Background="#13212C"
+                                    BorderBrush="#314657"
+                                    BorderThickness="1">
+                                <TextBlock Foreground="{StaticResource AccentBrush}"
+                                           FontWeight="SemiBold"
+                                           HorizontalAlignment="Center"
+                                           TextAlignment="Center"
+                                           Text="{Binding SaveFiles.Count, StringFormat={}{0} found}" />
+                            </Border>
+                        </DockPanel>
+                        <ListBox Grid.Row="1"
+                                 Style="{StaticResource SaveListBoxStyle}"
+                                 Background="Transparent"
+                                 Foreground="#F4F0E6"
+                                 ItemsSource="{Binding SaveFiles}"
+                                 SelectedItem="{Binding SelectedSaveEntry}">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border x:Name="SaveCard"
+                                            Margin="0,0,0,8"
+                                            Padding="12"
+                                            CornerRadius="22"
+                                            BorderBrush="{StaticResource StrokeBrush}"
+                                            BorderThickness="1.5">
+                                        <Border.Background>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                                                <GradientStop Color="#162531" Offset="0" />
+                                                <GradientStop Color="#10202A" Offset="1" />
+                                            </LinearGradientBrush>
+                                        </Border.Background>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="6" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border x:Name="SelectionBar"
+                                                    Grid.Column="0"
+                                                    Margin="0,4,10,4"
+                                                    Background="#9BCDDD"
+                                                    CornerRadius="999"
+                                                    Opacity="0.12" />
+                                            <Grid Grid.Column="1">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="28" />
+                                                </Grid.ColumnDefinitions>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <TextBlock Grid.Column="0"
+                                                           Grid.Row="0"
+                                                            Margin="0,0,12,0"
+                                                           TextTrimming="CharacterEllipsis"
+                                                           FontSize="16"
+                                                           FontWeight="Bold"
+                                                           Text="{Binding DisplayName}" />
+                                                <TextBlock x:Name="KindText"
+                                                           Grid.Row="1"
+                                                           Margin="0,4,12,0"
+                                                           Foreground="#93C5D8"
+                                                           FontSize="10"
+                                                           FontWeight="SemiBold"
+                                                           Text="{Binding Kind}" />
+                                                <TextBlock Grid.Column="0"
+                                                           Grid.Row="2"
+                                                           Margin="0,7,12,0"
+                                                           Foreground="#D8E4EC"
+                                                           FontSize="13"
+                                                           FontWeight="SemiBold"
+                                                           Text="{Binding FileName}" />
+                                                <TextBlock Grid.Column="0"
+                                                           Grid.Row="3"
+                                                           Margin="0,2,12,0"
+                                                           Foreground="{StaticResource MutedBrush}"
+                                                           FontSize="10"
+                                                           Text="{Binding Timestamp}" />
+                                                <Border x:Name="SelectionCircle"
+                                                        Grid.Column="1"
+                                                        Grid.Row="3"
+                                                        Width="22"
+                                                        Height="22"
+                                                        Margin="0,4,0,0"
+                                                        HorizontalAlignment="Right"
+                                                        VerticalAlignment="Bottom"
+                                                        Background="#162533"
+                                                        BorderBrush="#3D5568"
+                                                        BorderThickness="1.5"
+                                                        CornerRadius="999">
+                                                    <Path x:Name="SelectionTick"
+                                                          Width="10"
+                                                          Height="8"
+                                                          HorizontalAlignment="Center"
+                                                          VerticalAlignment="Center"
+                                                          Data="M 0 4 L 3 7 L 10 0"
+                                                          Stroke="#F7FCFF"
+                                                          StrokeThickness="2"
+                                                          StrokeStartLineCap="Round"
+                                                          StrokeEndLineCap="Round"
+                                                          StrokeLineJoin="Round"
+                                                          Visibility="Collapsed" />
+                                                </Border>
+                                            </Grid>
+                                        </Grid>
+                                    </Border>
+                                        <DataTemplate.Triggers>
+                                            <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsSelected}" Value="True">
+                                                <Setter TargetName="SaveCard" Property="BorderBrush" Value="#9BCDDD" />
+                                                <Setter TargetName="SaveCard" Property="BorderThickness" Value="2" />
+                                                <Setter TargetName="SelectionBar" Property="Opacity" Value="1" />
+                                                <Setter TargetName="KindText" Property="Foreground" Value="#C1E8F4" />
+                                                <Setter TargetName="SelectionCircle" Property="Background" Value="#2A4F66" />
+                                                <Setter TargetName="SelectionCircle" Property="BorderBrush" Value="#A5D4E6" />
+                                                <Setter TargetName="SelectionTick" Property="Visibility" Value="Visible" />
+                                            </DataTrigger>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=ListBoxItem}, Path=IsMouseOver}" Value="True">
+                                            <Setter TargetName="SaveCard" Property="BorderBrush" Value="#52687B" />
+                                            <Setter TargetName="SelectionBar" Property="Opacity" Value="0.4" />
+                                            <Setter TargetName="SelectionCircle" Property="BorderBrush" Value="#6F8AA0" />
+                                        </DataTrigger>
+                                    </DataTemplate.Triggers>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+                <TextBlock Grid.Row="2"
+                           Margin="4,0,4,0"
+                           Foreground="{StaticResource MutedBrush}"
+                           FontSize="12"
+                           Text="{Binding StatusMessage}"
+                           TextWrapping="Wrap" />
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="8,18,18,18">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <DockPanel Grid.Row="0" LastChildFill="False" Margin="0,0,0,8">
+                <StackPanel DockPanel.Dock="Right"
+                            Orientation="Horizontal"
+                            HorizontalAlignment="Right">
+                    <TextBlock Margin="0,0,12,0"
+                               VerticalAlignment="Center"
+                               FontSize="11"
+                               FontWeight="SemiBold"
+                               Foreground="{Binding TopActionBrush}"
+                               Text="{Binding TopActionMessage}"
+                               Visibility="{Binding TopActionVisibility}" />
+                    <Button Style="{StaticResource ActionButtonStyle}"
+                            MinWidth="82"
+                            MinHeight="40"
+                            Padding="12,8"
+                            Margin="0,0,8,0"
+                            Click="RefreshButton_Click"
+                            Content="Refresh" />
+                    <Button Style="{StaticResource ActionButtonStyle}"
+                            MinWidth="82"
+                            MinHeight="40"
+                            Padding="12,8"
+                            Margin="0,0,0,0"
+                            Click="SaveAll_Click"
+                            Content="Save" />
+                </StackPanel>
+            </DockPanel>
+
+            <TabControl Grid.Row="1" Margin="0,0,0,0">
+                <TabItem Header="Overview">
+                    <Grid Margin="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0" Style="{StaticResource CardStyle}" Padding="18">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="344" />
+                                </Grid.ColumnDefinitions>
+                                <Border Grid.RowSpan="2"
+                                        Grid.ColumnSpan="2"
+                                        CornerRadius="28"
+                                        Background="{StaticResource HeroBrush}"
+                                        Opacity="0.22" />
+                                <StackPanel Grid.Column="0"
+                                            Grid.RowSpan="2"
+                                            Margin="0,0,24,0"
+                                            VerticalAlignment="Center">
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                        <Border VerticalAlignment="Center"
+                                                Padding="9,4"
+                                                CornerRadius="999"
+                                                Background="#111A22"
+                                                BorderBrush="#395264"
+                                                BorderThickness="1">
+                                            <TextBlock Foreground="{StaticResource AccentBrush}"
+                                                       FontSize="12"
+                                                       FontWeight="SemiBold"
+                                                       Text="{Binding SelectedSaveEntry.Kind, StringFormat={}ACTIVE {0}}" />
+                                        </Border>
+                                        <TextBlock Margin="12,0,0,0"
+                                                   VerticalAlignment="Center"
+                                                   FontSize="24"
+                                                   FontWeight="Bold"
+                                                   Text="{Binding CurrentSave.SlotData.m_DisplayName}" />
+                                    </StackPanel>
+                                    <TextBlock Margin="0,8,0,0"
+                                               Foreground="{StaticResource MutedBrush}"
+                                               Text="{Binding OverviewNotes}"
+                                               TextWrapping="Wrap" />
+                                </StackPanel>
+                                <UniformGrid Grid.Column="1"
+                                             Grid.Row="1"
+                                             Columns="2"
+                                             Margin="0,0,0,0">
+                                    <Border Margin="0,0,10,10"
+                                            Padding="10,8"
+                                            CornerRadius="18"
+                                            BorderBrush="#2A3946"
+                                            BorderThickness="1"
+                                            Background="#121C25">
+                                        <StackPanel>
+                                            <TextBlock FontSize="11" Foreground="{StaticResource MutedBrush}" Text="Mode" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.SlotData.m_GameMode.Value}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Margin="0,0,0,10"
+                                            Padding="10,8"
+                                            CornerRadius="18"
+                                            BorderBrush="#2A3946"
+                                            BorderThickness="1"
+                                            Background="#121C25">
+                                        <StackPanel>
+                                            <TextBlock FontSize="11" Foreground="{StaticResource MutedBrush}" Text="Scene" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.Boot.m_SceneName.Value}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Margin="0,0,10,0"
+                                            Padding="10,8"
+                                            CornerRadius="18"
+                                            BorderBrush="#2A3946"
+                                            BorderThickness="1"
+                                            Background="#121C25">
+                                        <StackPanel>
+                                            <TextBlock FontSize="11" Foreground="{StaticResource MutedBrush}" Text="Version" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.SlotData.m_Version}" />
+                                        </StackPanel>
+                                    </Border>
+                                    <Border Margin="0,0,0,0"
+                                            Padding="10,8"
+                                            CornerRadius="18"
+                                            BorderBrush="#2A3946"
+                                            BorderThickness="1"
+                                            Background="#121C25">
+                                        <StackPanel>
+                                            <TextBlock FontSize="11" Foreground="{StaticResource MutedBrush}" Text="Changelist" />
+                                            <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.SlotData.m_Changelist}" />
+                                        </StackPanel>
+                                    </Border>
+                                </UniformGrid>
+                            </Grid>
+                        </Border>
+                        <UniformGrid Grid.Row="1" Columns="3">
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,14,14">
+                                <StackPanel>
+                                    <TextBlock FontSize="20" FontWeight="Bold" Text="Save" />
+                                    <TextBlock Margin="0,12,0,0" Foreground="{StaticResource MutedBrush}" Text="Name" />
+                                    <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.SlotData.m_DisplayName}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Timestamp" />
+                                    <TextBlock Text="{Binding CurrentSave.SlotData.m_Timestamp}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Scene" />
+                                    <TextBlock Text="{Binding CurrentSave.Boot.m_SceneName.Value}" />
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,14,14">
+                                <StackPanel>
+                                    <TextBlock FontSize="20" FontWeight="Bold" Text="Player Snapshot" />
+                                    <TextBlock Margin="0,12,0,0" Foreground="{StaticResource MutedBrush}" Text="Health" />
+                                    <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.Global.Condition.m_CurrentHPProxy, StringFormat={}{0:0.#}}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Calories" />
+                                    <TextBlock Text="{Binding CurrentSave.Global.Hunger.m_CurrentReserveCaloriesProxy, StringFormat={}{0:0.#}}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Fatigue" />
+                                    <TextBlock Text="{Binding CurrentSave.Global.Fatigue.m_CurrentFatigueProxy, StringFormat={}{0:0.#}}" />
+                                </StackPanel>
+                            </Border>
+                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,14">
+                                <StackPanel>
+                                    <TextBlock FontSize="20" FontWeight="Bold" Text="Inventory Snapshot" />
+                                    <TextBlock Margin="0,12,0,0" Foreground="{StaticResource MutedBrush}" Text="Items" />
+                                    <TextBlock FontWeight="Bold" Text="{Binding CurrentSave.Global.Inventory.Items.Count}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Unknown IDs" />
+                                    <TextBlock Text="{Binding UnknownInventoryIds.Count}" />
+                                    <TextBlock Margin="0,10,0,0" Foreground="{StaticResource MutedBrush}" Text="Profile" />
+                                    <TextBlock Text="{Binding ActiveProfilePath}" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </UniformGrid>
+                        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Margin="0,0,0,0">
+                            <TextBlock Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap">
+                                This screen is intentionally light. Most editing happens in Player, Inventory, Map and Afflictions. Advanced raw changes are still available if you need them.
+                            </TextBlock>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Player">
+                    <Grid Margin="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,18,0">
+                            <StackPanel>
+                                <TextBlock FontSize="20" FontWeight="Bold" Text="Status" />
+                                <TextBlock Margin="0,14,0,4" Foreground="{StaticResource MutedBrush}" Text="Experience Mode" />
+                                <ComboBox Style="{StaticResource EditorComboBoxStyle}"
+                                          ItemsSource="{Binding CurrentSave.Global.ExperienceModeManager.m_CurrentModeType.Values}"
+                                          SelectedItem="{Binding CurrentSave.Global.ExperienceModeManager.m_CurrentModeType.Value, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Current Region" />
+                                <ComboBox Style="{StaticResource EditorComboBoxStyle}"
+                                          ItemsSource="{Binding CurrentSave.Boot.m_SceneName.Values}"
+                                          SelectedItem="{Binding CurrentSave.Boot.m_SceneName.Value, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Health" />
+                                <Slider Minimum="0" Maximum="100" Value="{Binding CurrentSave.Global.Condition.m_CurrentHPProxy, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Condition.m_CurrentHPProxy}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Calories" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Hunger.m_CurrentReserveCaloriesProxy}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Thirst" />
+                                <Slider Minimum="0" Maximum="100" Value="{Binding CurrentSave.Global.Thirst.m_CurrentThirstProxy, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Thirst.m_CurrentThirstProxy}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Fatigue" />
+                                <Slider Minimum="0" Maximum="100" Value="{Binding CurrentSave.Global.Fatigue.m_CurrentFatigueProxy, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Fatigue.m_CurrentFatigueProxy}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Sprint / Stamina" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.PlayerMovement.m_SprintStamina}" />
+                                <WrapPanel Margin="0,2,0,0">
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="MaxSprintStamina_Click" Content="Set Very High Sprint" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock FontSize="20" FontWeight="Bold" Text="Position And Cheats" />
+                                <TextBlock Margin="0,14,0,4" Foreground="{StaticResource MutedBrush}" Text="Position X" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.PlayerManager.m_SaveGamePosition[0]}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Position Y" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.PlayerManager.m_SaveGamePosition[2]}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Position Z" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.PlayerManager.m_SaveGamePosition[1]}" />
+                                <CheckBox Margin="0,0,0,10" IsChecked="{Binding CurrentSave.Global.Condition.m_NeverDieProxy}" Content="Never Die" />
+                                <CheckBox Margin="0,0,0,10" IsChecked="{Binding CurrentSave.Global.Condition.m_Invulnerable}" Content="Invulnerable" />
+                                <CheckBox Margin="0,0,0,10" IsChecked="{Binding CurrentSave.Global.Inventory.m_ForceOverrideWeight}" Content="Infinite Carry" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Override Carry Weight" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Inventory.m_OverridedWeight}" />
+                                <TextBlock Foreground="{StaticResource MutedBrush}" Text="Freezing" />
+                                <Slider Minimum="0" Maximum="100" Value="{Binding CurrentSave.Global.Freezing.m_CurrentFreezingProxy, UpdateSourceTrigger=PropertyChanged}" />
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.Freezing.m_CurrentFreezingProxy}" />
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Map">
+                    <Grid Margin="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Text="{Binding MapStatusText}" TextWrapping="Wrap" />
+                                <TextBlock Margin="0,6,0,0"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           Text="{Binding MapSourceText}"
+                                           TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="0">
+                            <Canvas x:Name="MapCanvas"
+                                    Background="#0B141B"
+                                    ClipToBounds="True"
+                                    MouseLeftButtonDown="MapCanvas_MouseLeftButtonDown"
+                                    MouseLeftButtonUp="MapCanvas_MouseLeftButtonUp"
+                                    MouseMove="MapCanvas_MouseMove"
+                                    MouseWheel="MapCanvas_MouseWheel"
+                                    SizeChanged="MapCanvas_SizeChanged">
+                                <Viewbox x:Name="MapLayer" RenderTransformOrigin="0,0">
+                                    <Viewbox.RenderTransform>
+                                        <TransformGroup>
+                                            <ScaleTransform x:Name="MapScaleTransform" ScaleX="0.6" ScaleY="0.6" />
+                                            <TranslateTransform x:Name="MapTranslateTransform" X="0" Y="0" />
+                                        </TransformGroup>
+                                    </Viewbox.RenderTransform>
+                                    <Canvas x:Name="MapLayerCanvas">
+                                        <Image x:Name="MapImage" Stretch="Fill" />
+                                        <Image x:Name="PlayerMarker" Width="32" Height="32" Stretch="Fill">
+                                            <Image.RenderTransform>
+                                                <TransformGroup>
+                                                    <TranslateTransform X="-16" Y="-32" />
+                                                    <ScaleTransform x:Name="MapMarkerScaleTransform" ScaleX="1" ScaleY="1" />
+                                                </TransformGroup>
+                                            </Image.RenderTransform>
+                                        </Image>
+                                    </Canvas>
+                                </Viewbox>
+                                <TextBlock x:Name="MapCanvasMessage"
+                                           HorizontalAlignment="Center"
+                                           VerticalAlignment="Center"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           FontSize="24"
+                                           FontWeight="SemiBold" />
+                            </Canvas>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Inventory">
+                    <Grid Margin="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Style="{StaticResource CardStyle}" Padding="12">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="190" />
+                                    <ColumnDefinition Width="210" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <StackPanel Margin="0,0,10,0">
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Search" />
+                                    <TextBox Width="180" Style="{StaticResource EditorTextBoxStyle}" Text="{Binding InventorySearchText, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="1" Margin="0,0,10,0">
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Category" />
+                                    <ComboBox Width="195"
+                                              Style="{StaticResource EditorComboBoxStyle}"
+                                              ItemsSource="{Binding InventoryCategories}"
+                                              SelectedItem="{Binding SelectedInventoryCategory}"
+                                              DisplayMemberPath="Label" />
+                                </StackPanel>
+                                <StackPanel Grid.Column="2">
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Known Prefab ID" />
+                                    <ComboBox Style="{StaticResource EditorComboBoxStyle}"
+                                               ItemsSource="{Binding FilteredKnownItemIds}"
+                                              IsTextSearchEnabled="True"
+                                              SelectedItem="{Binding SelectedKnownItemId, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <StackPanel Grid.Row="1" Grid.ColumnSpan="3" Margin="0,2,0,0">
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Custom Prefab ID (optional)" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}"
+                                             Text="{Binding CustomPrefabId, UpdateSourceTrigger=PropertyChanged}" />
+                                </StackPanel>
+                                <Grid Grid.Row="2" Grid.ColumnSpan="3" Margin="0,0,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="126" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel Grid.Column="0" Margin="0,0,0,0">
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Duplicate Count" />
+                                        <TextBox Width="96"
+                                                 Style="{StaticResource EditorTextBoxStyle}"
+                                                 Text="{Binding DuplicateCountText, UpdateSourceTrigger=PropertyChanged}" />
+                                    </StackPanel>
+                                    <UniformGrid Grid.Column="2" Columns="7" Margin="0,18,0,0">
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="AddItem_Click" Content="Add Item" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="DuplicateSelectedItem_Click" Content="Duplicate" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="AddAllKnownItems_Click" Content="Add Listed Items" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="RepairAllItems_Click" Content="Repair All Items" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="BoostAllItemDurability_Click" Content="Boost Durability" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="RemoveSelectedItem_Click" Content="Remove Selected" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="RemoveAllItems_Click" Content="Remove All" />
+                                </UniformGrid>
+                                </Grid>
+                                <CheckBox Grid.Row="3"
+                                           Grid.ColumnSpan="3"
+                                           Margin="0,4,0,0"
+                                           IsChecked="{Binding IncludeHiddenItemsInBulkAdd}"
+                                           Content="Include hidden/internal items in bulk add" />
+                            </Grid>
+                        </Border>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="290" />
+                                <ColumnDefinition Width="10" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Border Grid.Column="0" Style="{StaticResource CardStyle}" Padding="10">
+                                <ListBox Background="Transparent" BorderThickness="0" Foreground="#F4F0E6" ItemsSource="{Binding InventoryItemsView}" SelectedItem="{Binding SelectedInventoryItem}">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border Margin="0,0,0,4" Background="#0D1218" CornerRadius="10" Padding="8,7" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                                                <Grid>
+                                                    <Grid.RowDefinitions>
+                                                        <RowDefinition Height="Auto" />
+                                                        <RowDefinition Height="Auto" />
+                                                    </Grid.RowDefinitions>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*" />
+                                                        <ColumnDefinition Width="Auto" />
+                                                    </Grid.ColumnDefinitions>
+                                                    <TextBlock Grid.Row="0"
+                                                               Grid.Column="0"
+                                                               Margin="0,0,8,0"
+                                                               FontSize="12"
+                                                               FontWeight="SemiBold"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Text="{Binding InGameName}" />
+                                                    <Border Grid.Row="0"
+                                                            Grid.Column="1"
+                                                            Height="20"
+                                                            MinWidth="76"
+                                                            Padding="8,0"
+                                                            CornerRadius="999"
+                                                            Background="#15212B"
+                                                            BorderBrush="#324757"
+                                                            BorderThickness="1"
+                                                            VerticalAlignment="Center">
+                                                        <TextBlock FontSize="10"
+                                                                   Foreground="{StaticResource AccentBrush}"
+                                                                   HorizontalAlignment="Center"
+                                                                   VerticalAlignment="Center"
+                                                                   TextAlignment="Center"
+                                                                   Text="{Binding Category}" />
+                                                    </Border>
+                                                    <TextBlock Grid.Row="1"
+                                                               Grid.Column="0"
+                                                               Grid.ColumnSpan="2"
+                                                               Margin="0,3,0,0"
+                                                               FontSize="10"
+                                                               Foreground="{StaticResource MutedBrush}"
+                                                               TextTrimming="CharacterEllipsis"
+                                                               Text="{Binding m_PrefabName}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                            </Border>
+                            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="10" Visibility="{Binding SelectedInventoryItem, Converter={StaticResource NullToVisibilityConverter}}">
+                                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                                    <StackPanel>
+                                        <Grid Margin="0,0,0,8">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto" />
+                                                <RowDefinition Height="Auto" />
+                                            </Grid.RowDefinitions>
+                                            <TextBlock FontSize="14"
+                                                       FontWeight="SemiBold"
+                                                       TextWrapping="Wrap"
+                                                       Text="{Binding SelectedInventoryItem.InGameName}" />
+                                            <TextBlock Grid.Row="1"
+                                                       Margin="0,2,0,0"
+                                                       FontSize="10"
+                                                       Foreground="{StaticResource MutedBrush}"
+                                                       TextWrapping="Wrap"
+                                                       Text="{Binding SelectedInventoryItem.m_PrefabName}" />
+                                        </Grid>
+
+                                        <Border Margin="0,0,0,8"
+                                                Padding="8"
+                                                CornerRadius="12"
+                                                BorderBrush="#2B3A47"
+                                                BorderThickness="1"
+                                                Background="#101821"
+                                                Visibility="{Binding CanEditCondition, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                            <Grid>
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="Auto" />
+                                                    <RowDefinition Height="Auto" />
+                                                </Grid.RowDefinitions>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="96" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.ColumnSpan="2"
+                                                           Style="{StaticResource CompactDetailLabelStyle}"
+                                                           Text="Condition" />
+                                                <Slider Grid.Row="1"
+                                                        Grid.Column="0"
+                                                        Margin="0,0,10,0"
+                                                        VerticalAlignment="Center"
+                                                        Minimum="0"
+                                                        Maximum="1"
+                                                        Value="{Binding SelectedInventoryItem.Gear.NormalizedCondition, UpdateSourceTrigger=PropertyChanged}" />
+                                                <TextBox Grid.Row="1"
+                                                         Grid.Column="1"
+                                                         Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                         Text="{Binding SelectedInventoryItem.Gear.NormalizedCondition}" />
+                                            </Grid>
+                                        </Border>
+
+                                        <WrapPanel Margin="0,0,0,2">
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditAmount, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Amount" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.StackableItem.m_UnitsProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditCalories, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Calories" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.FoodItem.m_CaloriesRemainingProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditLiquidLiters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Liquid Liters" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.LiquidItem.m_LiquidLitersProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditFuelLiters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Lamp Fuel Liters" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.KeroseneLampItem.m_CurrentFuelLitersProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditWaterVolume, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Water Liters" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.WaterSupply.m_VolumeProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditRounds, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Rounds In Clip" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.WeaponItem.m_RoundsInClipProxy}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditCraftProgress, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Craft Progress" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.InProgressItem.m_PercentComplete}" />
+                                                </StackPanel>
+                                            </Border>
+
+                                            <Border Style="{StaticResource InventoryDetailFieldCardStyle}"
+                                                    Visibility="{Binding CanEditEvolutionTime, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                                <StackPanel>
+                                                    <TextBlock Style="{StaticResource CompactDetailLabelStyle}" Text="Evolution Hours" />
+                                                    <TextBox Style="{StaticResource CompactDetailTextBoxStyle}"
+                                                             Text="{Binding SelectedInventoryItem.Gear.EvolveItem.m_TimeSpentEvolvingGameHours}" />
+                                                </StackPanel>
+                                            </Border>
+                                        </WrapPanel>
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Skills">
+                    <Grid Margin="12">
+                        <Border Style="{StaticResource CardStyle}">
+                            <UniformGrid Columns="2">
+                                <StackPanel Margin="0,0,18,0">
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Firestarting" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Firestarting.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Carcass Harvesting" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.CarcassHarvesting.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Cooking" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Cooking.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Ice Fishing" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.IceFishing.m_Points}" />
+                                </StackPanel>
+                                <StackPanel>
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Rifle" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Rifle.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Archery" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Archery.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Clothing Repair" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.ClothingRepair.m_Points}" />
+                                    <TextBlock Foreground="{StaticResource MutedBrush}" Text="Revolver / Gunsmith" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Revolver.m_Points}" />
+                                    <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentSave.Global.SkillsManager.Gunsmith.m_Points}" />
+                                </StackPanel>
+                            </UniformGrid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Afflictions">
+                    <Grid Margin="12">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="430" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+                        <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,18,0">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <StackPanel>
+                                    <TextBlock FontSize="20" FontWeight="Bold" Text="Afflictions" />
+                                    <TextBlock Margin="0,6,0,10" Foreground="{StaticResource MutedBrush}" Text="Highlighted zones show active negative afflictions on the body." TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Border Grid.Row="1"
+                                        Background="#0D1218"
+                                        CornerRadius="16"
+                                        Padding="10"
+                                        BorderBrush="{StaticResource StrokeBrush}"
+                                        BorderThickness="1"
+                                        MinHeight="560">
+                                    <Grid>
+                                        <Viewbox MaxWidth="250"
+                                                 MaxHeight="560"
+                                                 Stretch="Uniform"
+                                                 HorizontalAlignment="Center"
+                                                 VerticalAlignment="Center">
+                                            <images:InjuriesBody Width="320" Height="820" />
+                                        </Viewbox>
+                                    </Grid>
+                                </Border>
+                                <TextBlock Grid.Row="2"
+                                           Margin="0,10,0,0"
+                                           Foreground="{StaticResource MutedBrush}"
+                                           Text="The full figure stays visible so leg and foot injuries are easier to spot."
+                                           TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                        <Border Grid.Column="1" Style="{StaticResource CardStyle}">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock FontSize="20"
+                                               FontWeight="Bold"
+                                               VerticalAlignment="Center"
+                                               Text="Negative Afflictions" />
+                                    <Button Grid.Column="1"
+                                            Style="{StaticResource CompactActionButtonStyle}"
+                                            HorizontalAlignment="Right"
+                                            VerticalAlignment="Center"
+                                            Click="ClearNegativeAfflictions_Click"
+                                            Content="Clear All" />
+                                </Grid>
+                                <ScrollViewer Grid.Row="1" Margin="0,12,0,0" VerticalScrollBarVisibility="Auto">
+                                    <StackPanel>
+                                        <ItemsControl ItemsSource="{Binding CurrentSave.Afflictions.Negative}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Margin="0,0,0,8" Background="#0F1921" CornerRadius="10" Padding="10" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="Auto" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <StackPanel Margin="0,0,12,0">
+                                                                <TextBlock FontWeight="Bold" Text="{Binding AfflictionType, Converter={StaticResource EnumDescriptionConverter}}" />
+                                                                <TextBlock Margin="0,3,0,0" Foreground="{StaticResource MutedBrush}" Text="{Binding Location, StringFormat=Body Area: {0}}" />
+                                                            </StackPanel>
+                                                            <Button Grid.Column="1"
+                                                                    Style="{StaticResource CompactActionButtonStyle}"
+                                                                    VerticalAlignment="Center"
+                                                                    Command="{Binding RemoveCommand}"
+                                                                    Content="Cure" />
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </ScrollViewer>
+                                <Border Grid.Row="2" Margin="0,12,0,0" Background="#0F1921" CornerRadius="10" Padding="12" BorderBrush="{StaticResource StrokeBrush}" BorderThickness="1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*" />
+                                            <ColumnDefinition Width="Auto" />
+                                        </Grid.ColumnDefinitions>
+                                        <StackPanel Margin="0,0,12,0">
+                                            <TextBlock FontWeight="Bold" Text="Positive Effects" />
+                                            <TextBlock Margin="0,4,0,0" Foreground="{StaticResource MutedBrush}" Text="{Binding CurrentSave.Afflictions.Positive.Count, StringFormat=Count: {0}}" />
+                                        </StackPanel>
+                                        <Button Grid.Column="1"
+                                                Style="{StaticResource CompactActionButtonStyle}"
+                                                VerticalAlignment="Center"
+                                                Click="ClearPositiveAfflictions_Click"
+                                                Content="Clear Positive" />
+                                    </Grid>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Profile">
+                    <Grid Margin="12">
+                        <Grid>
+                            <TextBlock Visibility="{Binding CurrentProfile, Converter={StaticResource NullToVisibilityConverter}, ConverterParameter=Invert}"
+                                       Foreground="{StaticResource MutedBrush}"
+                                       Text="No profile file found for this save set." />
+                            <Border Style="{StaticResource CardStyle}" Visibility="{Binding CurrentProfile, Converter={StaticResource NullToVisibilityConverter}}">
+                                <UniformGrid Columns="2">
+                                    <StackPanel Margin="0,0,18,0">
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Book Smarts" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.BookSmarts.m_HoursResearch}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Cold Fusion" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.ColdFusion.m_ElapsedDays}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Efficient Machine" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.EfficientMachine.m_ElapsedHours}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Fire Master" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.FireMaster.m_NumFiresStarted}" />
+                                    </StackPanel>
+                                    <StackPanel>
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Snow Walker" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.SnowWalker.m_ElapsedKilometers}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Expert Trapper" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.ExpertTrapper.m_RabbitSnaredCount}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Straight To Heart" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.StraightToHeart.m_ItemConsumedCount}" />
+                                        <TextBlock Foreground="{StaticResource MutedBrush}" Text="Blizzard Walker" />
+                                        <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding CurrentProfile.State.Feats.BlizzardWalker.m_BlizzardHoursOutside}" />
+                                    </StackPanel>
+                                </UniformGrid>
+                            </Border>
+                        </Grid>
+                    </Grid>
+                </TabItem>
+                <TabItem Header="Raw">
+                    <Grid Margin="12">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border Style="{StaticResource CardStyle}">
+                            <StackPanel>
+                                <TextBlock Foreground="{StaticResource MutedBrush}" TextWrapping="Wrap">
+                                    Boot and Global are the safest raw edit targets. Slot and Profile are editable too; invalid JSON can break the save. Apply Raw parses in memory first, then Save To Disk writes with backups.
+                                </TextBlock>
+                                <WrapPanel Margin="0,12,0,0">
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="ApplyRaw_Click" Content="Apply Raw Changes" />
+                                    <Button Style="{StaticResource ActionButtonStyle}" Click="ResetRawEditors_Click" Content="Reset Raw Editors" />
+                                </WrapPanel>
+                            </StackPanel>
+                        </Border>
+                        <TabControl Grid.Row="1" Margin="0,8,0,0">
+                            <TabItem Header="Slot">
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding RawSlotJson, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" />
+                            </TabItem>
+                            <TabItem Header="Boot">
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding RawBootJson, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" />
+                            </TabItem>
+                            <TabItem Header="Global">
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding RawGlobalJson, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" />
+                            </TabItem>
+                            <TabItem Header="Profile">
+                                <TextBox Style="{StaticResource EditorTextBoxStyle}" Text="{Binding RawProfileJson, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" TextWrapping="NoWrap" />
+                            </TabItem>
+                        </TabControl>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </Grid>
+</Window>
