@@ -56,7 +56,7 @@ After publishing, start the packaged app:
 - This is an unofficial fan tool and is not affiliated with Hinterland Studio.
 - Save files are backed up before edits are written.
 - Bundled wiki map images were sourced from The Long Dark Wiki. Attribution is included in `CodexTldSaveEditor.App/Assets/Maps/Wiki/ATTRIBUTION.txt`.
-- This repository does not currently include a public open-source license. Choose a license before publishing publicly on GitHub if you want others to reuse the code.
+- Licensed under the MIT License. See `LICENSE` for details.
 
 ## Recommended GitHub Release Workflow
 
@@ -65,3 +65,4 @@ After publishing, start the packaged app:
 3. Commit source changes
 4. Push the repository to GitHub
 5. Create a GitHub Release and attach the published files as a zip if you want to distribute binaries
+
